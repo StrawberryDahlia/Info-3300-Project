@@ -1,1 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+  <meta charset="UTF-8">
+  <title>Harry Potter Book Sales</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+
+<body>
+
+  <h2>Harry Potter Book Sales (Millions)</h2>
+  <div id="chart"></div>
+
+  <script>
+    const bookSalesData = [
+      { book: 'Book 1', sales: 120 },
+      { book: 'Book 2', sales: 77 },
+      { book: 'Book 3', sales: 65 },
+      { book: 'Book 4', sales: 65 },
+      { book: 'Book 5', sales: 65 },
+      { book: 'Book 6', sales: 65 },
+      { book: 'Book 7', sales: 65 }
+    ];
+
+    const margin = { top: 50, right: 30, bottom: 50, left: 60 };
+    const width = 800 - margin.left - margin.right;
+    const height = 400 - margin.top - margin.bottom;
+
+    const svg = d3.select("#chart")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+    // Scales
+    const x = d3.scaleBand()
+      .domain(bookSalesData.map(d => d.book))
+      .range([0, width])
+      .padding(0.2);
+
+    const y = d3.scaleLinear()
+      .domain([0, d3.max(bookSalesData, d => d.sales)]).nice()
+      .range([height, 0]);
+
+    // Axes
+    svg.append("g")
+      .attr("class", "x-axis")
+      .attr("transform", `translate(0, ${height})`)
+      .call(d3.axisBottom(x));
+
+    svg.append("g")
+      .attr("class", "y-axis")
+      .call(d3.axisLeft(y));
+
+    // Bar Chart for Book Sales
+    svg.selectAll(".bar")
+      .data(bookSalesData)
+      .enter()
+      .append("rect")
+      .attr("class", "bar")
+      .attr("x", d => x(d.book))
+      .attr("width", x.bandwidth())
+      .attr("y", d => y(d.sales))
+      .attr("height", d => height - y(d.sales))
+      .attr("fill", "steelblue");
+
+    // Labels
+    svg.append("text")
+      .attr("x", -(height / 2))
+      .attr("y", -margin.left + 20)
+      .attr("transform", "rotate(-90)")
+      .style("text-anchor", "middle")
+      .text("Sales (Millions)");
+
+    svg.append("text")
+      .attr("x", width / 2)
+      .attr("y", height + margin.bottom - 10)
+      .style("text-anchor", "middle")
+      .text("Harry Potter Series");
+
+  </script>
+</body>
+
+</html>
