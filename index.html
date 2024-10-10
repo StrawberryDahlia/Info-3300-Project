@@ -12,7 +12,7 @@
   <h2>Harry Potter Book Sales (Millions)</h2>
   <div id="chart"></div>
 
-  <script>
+ <script>
     const bookSalesData = [
       { book: 'Book 1', sales: 120 },
       { book: 'Book 2', sales: 77 },
@@ -34,7 +34,6 @@
       .append("g")
       .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-    // Scales
     const x = d3.scaleBand()
       .domain(bookSalesData.map(d => d.book))
       .range([0, width])
@@ -44,7 +43,7 @@
       .domain([0, d3.max(bookSalesData, d => d.sales)]).nice()
       .range([height, 0]);
 
-    // Axes
+ 
     svg.append("g")
       .attr("class", "x-axis")
       .attr("transform", `translate(0, ${height})`)
@@ -54,19 +53,18 @@
       .attr("class", "y-axis")
       .call(d3.axisLeft(y));
 
-    // Bar Chart for Book Sales
-    svg.selectAll(".bar")
-      .data(bookSalesData)
-      .enter()
-      .append("rect")
-      .attr("class", "bar")
-      .attr("x", d => x(d.book))
-      .attr("width", x.bandwidth())
-      .attr("y", d => y(d.sales))
-      .attr("height", d => height - y(d.sales))
-      .attr("fill", "steelblue");
+   
+    bookSalesData.forEach(d => {
+      svg.append("rect")
+        .attr("class", "bar")
+        .attr("x", x(d.book))
+        .attr("width", x.bandwidth())
+        .attr("y", y(d.sales))
+        .attr("height", height - y(d.sales))
+        .attr("fill", "steelblue");
+    });
 
-    // Labels
+  
     svg.append("text")
       .attr("x", -(height / 2))
       .attr("y", -margin.left + 20)
@@ -79,8 +77,7 @@
       .attr("y", height + margin.bottom - 10)
       .style("text-anchor", "middle")
       .text("Harry Potter Series");
-
-  </script>
+</script>
 
   <div id="chart2"></div>
 
