@@ -23,58 +23,55 @@
       { book: 'Book 7', sales: 65 }
     ];
 
-    const margin = { top: 50, right: 30, bottom: 50, left: 60 };
-    const width = 800 - margin.left - margin.right;
-    const height = 400 - margin.top - margin.bottom;
+    const marginBarChart = { top: 50, right: 30, bottom: 50, left: 60 };
+    const widthBarChart = 800 - marginBarChart.left - marginBarChart.right;
+    const heightBarChart = 400 - marginBarChart.top - marginBarChart.bottom;
 
-    const svg = d3.select("#chart")
+    const svgBarChart = d3.select("#chart")
       .append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
+      .attr("width", widthBarChart + marginBarChart.left + marginBarChart.right)
+      .attr("height", heightBarChart + marginBarChart.top + marginBarChart.bottom)
       .append("g")
-      .attr("transform", `translate(${margin.left}, ${margin.top})`);
+      .attr("transform", `translate(${marginBarChart.left}, ${marginBarChart.top})`);
 
-    const x = d3.scaleBand()
+    const xBar = d3.scaleBand()
       .domain(bookSalesData.map(d => d.book))
-      .range([0, width])
+      .range([0, widthBarChart])
       .padding(0.2);
 
-    const y = d3.scaleLinear()
+    const yBar = d3.scaleLinear()
       .domain([0, d3.max(bookSalesData, d => d.sales)]).nice()
-      .range([height, 0]);
+      .range([heightBarChart, 0]);
 
- 
-    svg.append("g")
+    svgBarChart.append("g")
       .attr("class", "x-axis")
-      .attr("transform", `translate(0, ${height})`)
-      .call(d3.axisBottom(x));
+      .attr("transform", `translate(0, ${heightBarChart})`)
+      .call(d3.axisBottom(xBar));
 
-    svg.append("g")
+    svgBarChart.append("g")
       .attr("class", "y-axis")
-      .call(d3.axisLeft(y));
+      .call(d3.axisLeft(yBar));
 
-   
     bookSalesData.forEach(d => {
-      svg.append("rect")
+      svgBarChart.append("rect")
         .attr("class", "bar")
-        .attr("x", x(d.book))
-        .attr("width", x.bandwidth())
-        .attr("y", y(d.sales))
-        .attr("height", height - y(d.sales))
+        .attr("x", xBar(d.book))
+        .attr("width", xBar.bandwidth())
+        .attr("y", yBar(d.sales))
+        .attr("height", heightBarChart - yBar(d.sales))
         .attr("fill", "steelblue");
     });
 
-  
-    svg.append("text")
-      .attr("x", -(height / 2))
-      .attr("y", -margin.left + 20)
+    svgBarChart.append("text")
+      .attr("x", -(heightBarChart / 2))
+      .attr("y", -marginBarChart.left + 20)
       .attr("transform", "rotate(-90)")
       .style("text-anchor", "middle")
       .text("Sales (Millions)");
 
-    svg.append("text")
-      .attr("x", width / 2)
-      .attr("y", height + margin.bottom - 10)
+    svgBarChart.append("text")
+      .attr("x", widthBarChart / 2)
+      .attr("y", heightBarChart + marginBarChart.bottom - 10)
       .style("text-anchor", "middle")
       .text("Harry Potter Series");
 </script>
@@ -151,75 +148,25 @@
             { day: 66, sales: 308840000 }
         ];
 
-        const margin = { top: 50, right: 30, bottom: 50, left: 100 };
-        const width = 800 - margin.left - margin.right;
-        const height = 400 - margin.top - margin.bottom;
+        const marginLineChart = { top: 50, right: 30, bottom: 50, left: 100 };
+        const widthLineChart = 800 - marginLineChart.left - marginLineChart.right;
+        const heightLineChart = 400 - marginLineChart.top - marginLineChart.bottom;
 
-        const svg = d3.select("#chart2")
+        const svgLineChart = d3.select("#chart2")
             .append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
+            .attr("width", widthLineChart + marginLineChart.left + marginLineChart.right)
+            .attr("height", heightLineChart + marginLineChart.top + marginLineChart.bottom)
             .append("g")
-            .attr("transform", `translate(${margin.left}, ${margin.top})`);
+            .attr("transform", `translate(${marginLineChart.left}, ${marginLineChart.top})`);
 
-        // Scales
-        const x = d3.scaleLinear()
+        const xLine = d3.scaleLinear()
             .domain([d3.min(movieSalesData, d => d.day), d3.max(movieSalesData, d => d.day)]) 
-            .range([0, width]);
+            .range([0, widthLineChart]);
 
-        const y = d3.scaleLinear()
+        const yLine = d3.scaleLinear()
             .domain([0, d3.max(movieSalesData, d => d.sales)]).nice() 
-            .range([height, 0]);
+            .range([heightLineChart, 0]);
 
-        // Axes
-        svg.append("g")
+        svgLineChart.append("g")
             .attr("class", "x-axis")
-            .attr("transform", `translate(0, ${height})`)
-            .call(d3.axisBottom(x));  
-
-
-        svg.append("g")
-            .attr("class", "y-axis")
-            .call(d3.axisLeft(y));
-
-        // Line graph for day Sales
-        var lineGen = d3.line()
-            .x(d => x(d.day))  
-            .y(d => y(d.sales)) 
-            .curve(d3.curveMonotoneX);
-        svg.append("path")
-            .datum(movieSalesData)
-            .attr("class", "line")
-            .attr("fill", "none")
-            .attr("stroke", "steelblue")
-            .attr("stroke-width", 2)
-            .attr("d", lineGen); // Use the line generator for the 'd' attribute
-
-        // Add circles at each data point
-        svg.selectAll("circle")
-            .data(movieSalesData)
-            .join("circle")
-            .attr("r", 2)
-            .attr("fill", "navy")
-            .attr("cx", d => x(d.day))
-            .attr("cy", d => y(d.sales));
-
-        // Labels
-        svg.append("text")
-            .attr("x", -(height / 2))
-            .attr("y", -margin.left + 20)
-            .attr("transform", "rotate(-90)")
-            .style("text-anchor", "middle")
-            .text("Domestic Box Ofice Revenue (USD)");
-
-        svg.append("text")
-            .attr("x", width / 2)
-            .attr("y", height + margin.bottom - 10)
-            .style("text-anchor", "middle")
-            .text("Time");
-
-    </script>
-
-</body>
-
-</html>
+            .attr("transform", `translate(0
