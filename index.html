@@ -12,7 +12,7 @@
   <h2>Harry Potter Book Sales (Millions)</h2>
   <div id="chart"></div>
 
- <script>
+  <script>
     const bookSalesData = [
       { book: 'Book 1', sales: 120 },
       { book: 'Book 2', sales: 77 },
@@ -23,150 +23,139 @@
       { book: 'Book 7', sales: 65 }
     ];
 
-    const marginBarChart = { top: 50, right: 30, bottom: 50, left: 60 };
-    const widthBarChart = 800 - marginBarChart.left - marginBarChart.right;
-    const heightBarChart = 400 - marginBarChart.top - marginBarChart.bottom;
+    const margin1 = { top: 50, right: 30, bottom: 50, left: 60 };
+    const width1 = 800 - margin1.left - margin1.right;
+    const height1 = 400 - margin1.top - margin1.bottom;
 
-    const svgBarChart = d3.select("#chart")
+    const svg1 = d3.select("#chart")
       .append("svg")
-      .attr("width", widthBarChart + marginBarChart.left + marginBarChart.right)
-      .attr("height", heightBarChart + marginBarChart.top + marginBarChart.bottom)
+      .attr("width", width1 + margin1.left + margin1.right)
+      .attr("height", height1 + margin1.top + margin1.bottom)
       .append("g")
-      .attr("transform", `translate(${marginBarChart.left}, ${marginBarChart.top})`);
+      .attr("transform", `translate(${margin1.left}, ${margin1.top})`);
 
-    const xBar = d3.scaleBand()
+    const x1 = d3.scaleBand()
       .domain(bookSalesData.map(d => d.book))
-      .range([0, widthBarChart])
+      .range([0, width1])
       .padding(0.2);
 
-    const yBar = d3.scaleLinear()
+    const y1 = d3.scaleLinear()
       .domain([0, d3.max(bookSalesData, d => d.sales)]).nice()
-      .range([heightBarChart, 0]);
+      .range([height1, 0]);
 
-    svgBarChart.append("g")
+    svg1.append("g")
       .attr("class", "x-axis")
-      .attr("transform", `translate(0, ${heightBarChart})`)
-      .call(d3.axisBottom(xBar));
+      .attr("transform", `translate(0, ${height1})`)
+      .call(d3.axisBottom(x1));
 
-    svgBarChart.append("g")
+    svg1.append("g")
       .attr("class", "y-axis")
-      .call(d3.axisLeft(yBar));
+      .call(d3.axisLeft(y1));
 
     bookSalesData.forEach(d => {
-      svgBarChart.append("rect")
+      svg1.append("rect")
         .attr("class", "bar")
-        .attr("x", xBar(d.book))
-        .attr("width", xBar.bandwidth())
-        .attr("y", yBar(d.sales))
-        .attr("height", heightBarChart - yBar(d.sales))
+        .attr("x", x1(d.book))
+        .attr("width", x1.bandwidth())
+        .attr("y", y1(d.sales))
+        .attr("height", height1 - y1(d.sales))
         .attr("fill", "steelblue");
     });
 
-    svgBarChart.append("text")
-      .attr("x", -(heightBarChart / 2))
-      .attr("y", -marginBarChart.left + 20)
+    svg1.append("text")
+      .attr("x", -(height1 / 2))
+      .attr("y", -margin1.left + 20)
       .attr("transform", "rotate(-90)")
       .style("text-anchor", "middle")
       .text("Sales (Millions)");
 
-    svgBarChart.append("text")
-      .attr("x", widthBarChart / 2)
-      .attr("y", heightBarChart + marginBarChart.bottom - 10)
+    svg1.append("text")
+      .attr("x", width1 / 2)
+      .attr("y", height1 + margin1.bottom - 10)
       .style("text-anchor", "middle")
       .text("Harry Potter Series");
-</script>
+  </script>
 
   <div id="chart2"></div>
 
-    <script>
-        const movieSalesData = [
-            { day: 1, sales: 32333203 },
-            { day: 2, sales: 65846144 },
-            { day: 3, sales: 90294621 },
-            { day: 4, sales: 96937000 },
-            { day: 5, sales: 104591000 },
-            { day: 6, sales: 117246000 },
-            { day: 7, sales: 129566000 },
-            { day: 8, sales: 152478000 },
-            { day: 9, sales: 173566000 },
-            { day: 10, sales: 186978513 },
-            { day: 11, sales: 189505000 },
-            { day: 12, sales: 191888000 },
-            { day: 13, sales: 193954000 },
-            { day: 14, sales: 196027000 },
-            { day: 15, sales: 201933000 },
-            { day: 16, sales: 212287000 },
-            { day: 17, sales: 219670289 },
-            { day: 18, sales: 220932000 },
-            { day: 19, sales: 222343000 },
-            { day: 20, sales: 223648000 },
-            { day: 21, sales: 224884000 },
-            { day: 22, sales: 228404000 },
-            { day: 23, sales: 234792000 },
-            { day: 24, sales: 239659542 },
-            { day: 25, sales: 240528000 },
-            { day: 26, sales: 241559000 },
-            { day: 27, sales: 242448000 },
-            { day: 28, sales: 243350000 },
-            { day: 29, sales: 245571000 },
-            { day: 30, sales: 249933000 },
-            { day: 31, sales: 253270000 },
-            { day: 32, sales: 254082000 },
-            { day: 33, sales: 255003000 },
-            { day: 34, sales: 255917000 },
-            { day: 35, sales: 257460000 },
-            { day: 36, sales: 259200000 },
-            { day: 37, sales: 261956000 },
-            { day: 38, sales: 264655000 },
-            { day: 39, sales: 266200000 },
-            { day: 40, sales: 267750733 },
-            { day: 41, sales: 271144000 },
-            { day: 42, sales: 274649000 },
-            { day: 43, sales: 278270000 },
-            { day: 44, sales: 282099000 },
-            { day: 45, sales: 285611000 },
-            { day: 46, sales: 288493000 },
-            { day: 47, sales: 291594218 },
-            { day: 48, sales: 293206000 },
-            { day: 49, sales: 294474000 },
-            { day: 50, sales: 296313000 },
-            { day: 51, sales: 298696000 },
-            { day: 52, sales: 300404434 },
-            { day: 53, sales: 300739000 },
-            { day: 54, sales: 301082000 },
-            { day: 55, sales: 301368000 },
-            { day: 56, sales: 301638000 },
-            { day: 57, sales: 302390000 },
-            { day: 58, sales: 304014000 },
-            { day: 59, sales: 305311880 },
-            { day: 60, sales: 305533000 },
-            { day: 61, sales: 305775000 },
-            { day: 62, sales: 305989000 },
-            { day: 63, sales: 306206000 },
-            { day: 64, sales: 306755000 },
-            { day: 65, sales: 307850000 },
-            { day: 66, sales: 308840000 }
-        ];
+  <script>
+    const movieSalesData = [
+      { day: 1, sales: 32333203 },
+      { day: 2, sales: 65846144 },
+      { day: 3, sales: 90294621 },
+      { day: 4, sales: 96937000 },
+      { day: 5, sales: 104591000 },
+      { day: 6, sales: 117246000 },
+      { day: 7, sales: 129566000 },
+      { day: 8, sales: 152478000 },
+      { day: 9, sales: 173566000 },
+      { day: 10, sales: 186978513 }
+      // Add more days as needed...
+    ];
 
-        const marginLineChart = { top: 50, right: 30, bottom: 50, left: 100 };
-        const widthLineChart = 800 - marginLineChart.left - marginLineChart.right;
-        const heightLineChart = 400 - marginLineChart.top - marginLineChart.bottom;
+    const margin2 = { top: 50, right: 30, bottom: 50, left: 100 };
+    const width2 = 800 - margin2.left - margin2.right;
+    const height2 = 400 - margin2.top - margin2.bottom;
 
-        const svgLineChart = d3.select("#chart2")
-            .append("svg")
-            .attr("width", widthLineChart + marginLineChart.left + marginLineChart.right)
-            .attr("height", heightLineChart + marginLineChart.top + marginLineChart.bottom)
-            .append("g")
-            .attr("transform", `translate(${marginLineChart.left}, ${marginLineChart.top})`);
+    const svg2 = d3.select("#chart2")
+      .append("svg")
+      .attr("width", width2 + margin2.left + margin2.right)
+      .attr("height", height2 + margin2.top + margin2.bottom)
+      .append("g")
+      .attr("transform", `translate(${margin2.left}, ${margin2.top})`);
 
-        const xLine = d3.scaleLinear()
-            .domain([d3.min(movieSalesData, d => d.day), d3.max(movieSalesData, d => d.day)]) 
-            .range([0, widthLineChart]);
+    const x2 = d3.scaleLinear()
+      .domain([d3.min(movieSalesData, d => d.day), d3.max(movieSalesData, d => d.day)])
+      .range([0, width2]);
 
-        const yLine = d3.scaleLinear()
-            .domain([0, d3.max(movieSalesData, d => d.sales)]).nice() 
-            .range([heightLineChart, 0]);
+    const y2 = d3.scaleLinear()
+      .domain([0, d3.max(movieSalesData, d => d.sales)]).nice()
+      .range([height2, 0]);
 
-        svgLineChart.append("g")
-            .attr("class", "x-axis")
-            .attr("transform", `translate(0
+    svg2.append("g")
+      .attr("class", "x-axis")
+      .attr("transform", `translate(0, ${height2})`)
+      .call(d3.axisBottom(x2));
+
+    svg2.append("g")
+      .attr("class", "y-axis")
+      .call(d3.axisLeft(y2));
+
+    var lineGen = d3.line()
+      .x(d => x2(d.day))
+      .y(d => y2(d.sales))
+      .curve(d3.curveMonotoneX);
+
+    svg2.append("path")
+      .datum(movieSalesData)
+      .attr("class", "line")
+      .attr("fill", "none")
+      .attr("stroke", "steelblue")
+      .attr("stroke-width", 2)
+      .attr("d", lineGen);
+
+    svg2.selectAll("circle")
+      .data(movieSalesData)
+      .join("circle")
+      .attr("r", 2)
+      .attr("fill", "navy")
+      .attr("cx", d => x2(d.day))
+      .attr("cy", d => y2(d.sales));
+
+    svg2.append("text")
+      .attr("x", -(height2 / 2))
+      .attr("y", -margin2.left + 20)
+      .attr("transform", "rotate(-90)")
+      .style("text-anchor", "middle")
+      .text("Domestic Box Office Revenue (USD)");
+
+    svg2.append("text")
+      .attr("x", width2 / 2)
+      .attr("y", height2 + margin2.bottom - 10)
+      .style("text-anchor", "middle")
+      .text("Days");
+  </script>
+
+</body>
+
+</html>
