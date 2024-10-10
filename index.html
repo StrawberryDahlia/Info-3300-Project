@@ -159,9 +159,10 @@
       .append("g")
       .attr("transform", `translate(${margin2.left}, ${margin2.top})`);
 
+ 
     const x2 = d3.scaleLinear()
-      .domain([d3.min(movieSalesData, d => d.day), d3.max(movieSalesData, d => d.day)])
-      .range([0, width2]);
+    .domain([1, d3.max(movieSalesData, d => d.day)])  
+    .range([0, width2]);
 
     const y2 = d3.scaleLinear()
       .domain([0, d3.max(movieSalesData, d => d.sales)]).nice()
