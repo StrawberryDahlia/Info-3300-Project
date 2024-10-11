@@ -5,7 +5,6 @@
     <title>Harry Potter Book and Movie Sales</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
 
-
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -16,11 +15,12 @@
 
         h2 {
             text-align: center;
-            color: black
+            color: black;
         }
 
         #chart,
-        #chart2 {
+        #chart2,
+        #chart3 {
             margin: 20px auto;
             max-width: 800px;
             background-color: white;
@@ -28,11 +28,6 @@
             border-radius: 8px;
             padding: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-
-        .lines {
-            stroke-dasharray: 5, 5;
         }
 
         .x-axis text,
@@ -56,8 +51,9 @@
 <body>
 
     <h2>Harry Potter Book and Movie Sales</h2>
-    <div id="chart"></div>
 
+    <!-- Book Sales Bar Chart -->
+    <div id="chart"></div>
     <script>
         const bookSalesData = [
             { book: "Sorcerer's Stone", sales: 120 },
@@ -114,25 +110,29 @@
             .attr("transform", "rotate(-90)")
             .style("text-anchor", "middle")
             .text("Sales (Millions)");
+
         svg1.append("text")
             .attr("x", width1 / 2)
             .attr("y", height1 + margin1.bottom - 10)
             .style("text-anchor", "middle")
             .text("Harry Potter Series");
+
         svg1.append("text")
             .attr("x", width1 / 2)
             .attr("y", -20)
             .style("text-anchor", "middle")
             .text("Book Copies Sold");
     </script>
+
+    <!-- Movie Revenue Bar Chart -->
     <div id="chart3"></div>
-      <script>
+    <script>
         const movieRevData = [
-            { movie: "Sorcerer's Stone", sales: 317 },
-            { movie: 'Chamber Of Secrets', sales: 262 },
-            { movie: 'Prisoner Of Azkaban', sales: 249 },
-            { movie: 'Goblet Of Fire', sales: 290 },
-            { movie: 'Order Of The Phoenix', sales: 292 }
+            { movie: "Sorcerer's Stone", rev: 317 },
+            { movie: 'Chamber Of Secrets', rev: 262 },
+            { movie: 'Prisoner Of Azkaban', rev: 249 },
+            { movie: 'Goblet Of Fire', rev: 290 },
+            { movie: 'Order Of The Phoenix', rev: 292 }
         ];
 
         const margin3 = { top: 50, right: 30, bottom: 50, left: 60 };
@@ -152,7 +152,7 @@
             .padding(0.2);
 
         const y3 = d3.scaleLinear()
-            .domain([0, d3.max(movieRevData, d => d.sales)]).nice()
+            .domain([0, d3.max(movieRevData, d => d.rev)]).nice()
             .range([height3, 0]);
 
         svg3.append("g")
@@ -164,15 +164,13 @@
             .attr("class", "y-axis")
             .call(d3.axisLeft(y3));
 
-        const colors = ["#D2691E", "#800000", "#FFDAB9", "#40E0D0", "#0000FF"];
-
         movieRevData.forEach((d, i) => {
             svg3.append("rect")
                 .attr("class", "bar")
-                .attr("x", x3(d.book))
-                .attr("width", x1.bandwidth())
-                .attr("y", y3(d.sales))
-                .attr("height", height1 - y3(d.sales))
+                .attr("x", x3(d.movie))
+                .attr("width", x3.bandwidth())
+                .attr("y", y3(d.rev))
+                .attr("height", height3 - y3(d.rev))
                 .attr("fill", colors[i]);
         });
 
@@ -181,12 +179,14 @@
             .attr("y", -margin3.left + 20)
             .attr("transform", "rotate(-90)")
             .style("text-anchor", "middle")
-            .text("Sales (Millions)");
+            .text("Box Office Revenue (Millions)");
+
         svg3.append("text")
             .attr("x", width3 / 2)
             .attr("y", height3 + margin3.bottom - 10)
             .style("text-anchor", "middle")
             .text("Harry Potter Series");
+
         svg3.append("text")
             .attr("x", width3 / 2)
             .attr("y", -20)
@@ -194,10 +194,9 @@
             .text("Box Office Domestic Total");
     </script>
 
+    <!-- Movie Box Office Line Chart -->
     <div id="chart2"></div>
-
     <script>
-        // sorcerers stone
         const movieSalesData = [
             { day: 1, sales: 32333203 },
             { day: 2, sales: 65846144 },
@@ -261,7 +260,7 @@
             { day: 60, sales: 305533000 }
         ];
 
-        // chamber of secrets
+         // chamber of secrets
         const movieSalesData1 = [
             { day: 1, sales: 29631453 },
             { day: 2, sales: 63845256 },
@@ -479,10 +478,10 @@
             { day: 51, sales: 284250119 },
             { day: 55, sales: 286825495 }
         ];
-
         const margin2 = { top: 50, right: 30, bottom: 50, left: 110 };
         const width2 = 800 - margin2.left - margin2.right;
-        const height2 = 800 - margin2.top - margin2.bottom;
+        const height2 = 400 - margin2.top - margin2.bottom;
+
         const svg2 = d3.select("#chart2")
             .append("svg")
             .attr("width", width2 + margin2.left + margin2.right)
@@ -490,19 +489,21 @@
             .append("g")
             .attr("transform", `translate(${margin2.left}, ${margin2.top})`);
 
-        const allData = [...movieSalesData, ...movieSalesData1,
-        ...movieSalesData2, ...movieSalesData3, ...movieSalesData4];
+        const allData = [...movieSalesData, ...movieSalesData1, ...movieSalesData2, ...movieSalesData3, ...movieSalesData4];
 
         const x2 = d3.scaleLinear()
             .domain([1, d3.max(allData, d => d.day)])
             .range([0, width2]);
+
         const y2 = d3.scaleLinear()
             .domain([0, d3.max(allData, d => d.sales)]).nice()
             .range([height2, 0]);
+
         svg2.append("g")
             .attr("class", "x-axis")
             .attr("transform", `translate(0, ${height2})`)
             .call(d3.axisBottom(x2));
+
         svg2.append("g")
             .attr("class", "y-axis")
             .call(d3.axisLeft(y2));
@@ -512,82 +513,35 @@
             .y(d => y2(d.sales))
             .curve(d3.curveMonotoneX);
 
-        svg2.append("path")
-            .datum(movieSalesData)
-            .attr("class", "line")
-            .attr("fill", "none")
-            .attr("stroke", colors[0])
-            .attr("stroke-width", 2)
-            .attr("d", lineGen);
-        svg2.append("path")
-            .datum(movieSalesData1)
-            .attr("class", "line")
-            .attr("fill", "none")
-            .attr("stroke", colors[1])
-            .attr("stroke-width", 2)
-            .attr("d", lineGen);
-        svg2.append("path")
-            .datum(movieSalesData2)
-            .attr("class", "line")
-            .attr("fill", "none")
-            .attr("stroke", colors[2])
-            .attr("stroke-width", 2)
-            .attr("d", lineGen);
-        svg2.append("path")
-            .datum(movieSalesData3)
-            .attr("class", "line")
-            .attr("fill", "none")
-            .attr("stroke", colors[3])
-            .attr("stroke-width", 2)
-            .attr("d", lineGen);
-        svg2.append("path")
-            .datum(movieSalesData4)
-            .attr("class", "line")
-            .attr("fill", "none")
-            .attr("stroke", colors[4])
-            .attr("stroke-width", 2)
-            .attr("d", lineGen);
+        const colorsForLines = ["#D2691E", "#800000", "#FFDAB9", "#40E0D0", "#0000FF"];
 
-        svg2.selectAll("circle.movie1")
-            .data(movieSalesData)
-            .join("circle")
-            .attr("class", "movie1")
-            .attr("r", 2)
-            .attr("fill", colors[0])
-            .attr("cx", d => x2(d.day))
-            .attr("cy", d => y2(d.sales));
-        svg2.selectAll("circle.movie2")
-            .data(movieSalesData1)
-            .join("circle")
-            .attr("class", "movie2")
-            .attr("r", 2)
-            .attr("fill", colors[1])
-            .attr("cx", d => x2(d.day))
-            .attr("cy", d => y2(d.sales));
-        svg2.selectAll("circle.movie3")
-            .data(movieSalesData2)
-            .join("circle")
-            .attr("class", "movie3")
-            .attr("r", 2)
-            .attr("fill", colors[2])
-            .attr("cx", d => x2(d.day))
-            .attr("cy", d => y2(d.sales));
-        svg2.selectAll("circle.movie4")
-            .data(movieSalesData3)
-            .join("circle")
-            .attr("class", "movie4")
-            .attr("r", 2)
-            .attr("fill", colors[3])
-            .attr("cx", d => x2(d.day))
-            .attr("cy", d => y2(d.sales));
-        svg2.selectAll("circle.movie5")
-            .data(movieSalesData4)
-            .join("circle")
-            .attr("class", "movie5")
-            .attr("r", 2)
-            .attr("fill", colors[4])
-            .attr("cx", d => x2(d.day))
-            .attr("cy", d => y2(d.sales));
+       
+      const movieDataSets = [
+            { data: movieSalesData, title: "Sorcerer's Stone" },
+            { data: movieSalesData1, title: "Chamber of Secrets" },
+            { data: movieSalesData2, title: "Prisoner of Azkaban" },
+            { data: movieSalesData3, title: "Goblet of Fire" },
+            { data: movieSalesData4, title: "Order of the Phoenix" }
+        ];
+
+        movieDataSets.forEach((dataset, i) => {
+            svg2.append("path")
+                .datum(dataset.data)
+                .attr("class", "line")
+                .attr("fill", "none")
+                .attr("stroke", colorsForLines[i])
+                .attr("stroke-width", 2)
+                .attr("d", lineGen);
+
+            svg2.selectAll(`circle.movie${i + 1}`)
+                .data(dataset.data)
+                .join("circle")
+                .attr("class", `movie${i + 1}`)
+                .attr("r", 2)
+                .attr("fill", colorsForLines[i])
+                .attr("cx", d => x2(d.day))
+                .attr("cy", d => y2(d.sales));
+        });
 
         svg2.append("text")
             .attr("x", -(height2 / 2))
@@ -595,16 +549,37 @@
             .attr("transform", "rotate(-90)")
             .style("text-anchor", "middle")
             .text("Domestic Box Office (USD)");
+
         svg2.append("text")
             .attr("x", width2 / 2)
             .attr("y", height2 + margin2.bottom - 10)
             .style("text-anchor", "middle")
             .text("Days");
+
         svg2.append("text")
             .attr("x", width2 / 2)
             .attr("y", -20)
             .style("text-anchor", "middle")
             .text("Movie Box Office Revenue");
+	
+	const legend = svg2.append("g")
+    		.attr("transform", `translate(${width2 - 100}, ${height2 - 150})`); 		
+
+	movieDataSets.forEach((dataset, i) => {
+   	 	legend.append("rect")
+        		.attr("x", 0)
+        		.attr("y", i * 20)
+        		.attr("width", 10)
+        		.attr("height", 10)
+        		.attr("fill", colorsForLines[i]);
+
+    		legend.append("text")
+        		.attr("x", 15)  
+        		.attr("y", i * 20 + 9)
+        		.text(dataset.title)
+        		.style("font-size", "12px")
+        		.attr("alignment-baseline", "middle");
+	});
     </script>
 
 </body>
