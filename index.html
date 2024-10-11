@@ -424,14 +424,16 @@
             .attr("height", height2 + margin2.top + margin2.bottom)
             .append("g")
             .attr("transform", `translate(${margin2.left}, ${margin2.top})`);
+  const allData = [...movieSalesData, ...movieSalesData1,
+        ...movieSalesData2, ...movieSalesData3, ...movieSalesData4];
 
         const x2 = d3.scaleLinear()
-            .domain([1, d3.max(movieSalesData, d => d.day)])
+            .domain([1, d3.max(allData, d => d.day)])
             .range([0, width2]);
-
         const y2 = d3.scaleLinear()
-            .domain([0, d3.max(movieSalesData, d => d.sales)]).nice()
+            .domain([0, d3.max(allData, d => d.sales)]).nice()
             .range([height2, 0]);
+    
 
         svg2.append("g")
             .attr("class", "x-axis")
