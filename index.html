@@ -426,19 +426,22 @@
             .append("g")
             .attr("transform", translate(${margin2.left}, ${margin2.top}));
 
-        const allData = [...movieSalesData, ...movieSalesData1,
-        ...movieSalesData2, ...movieSalesData3, ...movieSalesData4];
+        const allData = [movieSalesData, movieSalesData1, movieSalesData2, movieSalesData3, movieSalesData4];
+        const colors = ["#D2691E", "#800000", "#FFDAB9", "#40E0D0", "#0000FF"];
 
         const x2 = d3.scaleLinear()
-            .domain([1, d3.max(allData, d => d.day)])
+            .domain([1, d3.max(movieSalesData4, d => d.day)])
             .range([0, width2]);
+
         const y2 = d3.scaleLinear()
-            .domain([0, d3.max(allData, d => d.sales)]).nice()
+            .domain([0, d3.max(movieSalesData4, d => d.sales)]).nice()
             .range([height2, 0]);
+
         svg2.append("g")
             .attr("class", "x-axis")
-            .attr("transform", translate(0, ${height2}))
+            .attr("transform", `translate(0, ${height2})`)
             .call(d3.axisBottom(x2));
+
         svg2.append("g")
             .attr("class", "y-axis")
             .call(d3.axisLeft(y2));
@@ -448,82 +451,24 @@
             .y(d => y2(d.sales))
             .curve(d3.curveMonotoneX);
 
-        svg2.append("path")
-            .datum(movieSalesData)
-            .attr("class", "line")
-            .attr("fill", "none")
-            .attr("stroke", colors[0])
-            .attr("stroke-width", 2)
-            .attr("d", lineGen);
-        svg2.append("path")
-            .datum(movieSalesData1)
-            .attr("class", "line")
-            .attr("fill", "none")
-            .attr("stroke", colors[1])
-            .attr("stroke-width", 2)
-            .attr("d", lineGen);
-        svg2.append("path")
-            .datum(movieSalesData2)
-            .attr("class", "line")
-            .attr("fill", "none")
-            .attr("stroke", colors[2])
-            .attr("stroke-width", 2)
-            .attr("d", lineGen);
-        svg2.append("path")
-            .datum(movieSalesData3)
-            .attr("class", "line")
-            .attr("fill", "none")
-            .attr("stroke", colors[3])
-            .attr("stroke-width", 2)
-            .attr("d", lineGen);
-        svg2.append("path")
-            .datum(movieSalesData4)
-            .attr("class", "line")
-            .attr("fill", "none")
-            .attr("stroke", colors[4])
-            .attr("stroke-width", 2)
-            .attr("d", lineGen);
+        allData.forEach((movieData, i) => {
+            svg2.append("path")
+                .datum(movieData)
+                .attr("class", "line")
+                .attr("fill", "none")
+                .attr("stroke", colors[i])
+                .attr("stroke-width", 2)
+                .attr("d", lineGen);
 
-        svg2.selectAll("circle.movie1")
-            .data(movieSalesData)
-            .join("circle")
-            .attr("class", "movie1")
-            .attr("r", 2)
-            .attr("fill", colors[0])
-            .attr("cx", d => x2(d.day))
-            .attr("cy", d => y2(d.sales));
-        svg2.selectAll("circle.movie2")
-            .data(movieSalesData1)
-            .join("circle")
-            .attr("class", "movie2")
-            .attr("r", 2)
-            .attr("fill", colors[1])
-            .attr("cx", d => x2(d.day))
-            .attr("cy", d => y2(d.sales));
-        svg2.selectAll("circle.movie3")
-            .data(movieSalesData2)
-            .join("circle")
-            .attr("class", "movie3")
-            .attr("r", 2)
-            .attr("fill", colors[2])
-            .attr("cx", d => x2(d.day))
-            .attr("cy", d => y2(d.sales));
-        svg2.selectAll("circle.movie4")
-            .data(movieSalesData3)
-            .join("circle")
-            .attr("class", "movie4")
-            .attr("r", 2)
-            .attr("fill", colors[3])
-            .attr("cx", d => x2(d.day))
-            .attr("cy", d => y2(d.sales));
-        svg2.selectAll("circle.movie5")
-            .data(movieSalesData4)
-            .join("circle")
-            .attr("class", "movie5")
-            .attr("r", 2)
-            .attr("fill", colors[4])
-            .attr("cx", d => x2(d.day))
-            .attr("cy", d => y2(d.sales));
+            svg2.selectAll(`circle.movie${i}`)
+                .data(movieData)
+                .join("circle")
+                .attr("class", `movie${i}`)
+                .attr("r", 2)
+                .attr("fill", colors[i])
+                .attr("cx", d => x2(d.day))
+                .attr("cy", d => y2(d.sales));
+        });
 
         svg2.append("text")
             .attr("x", -(height2 / 2))
@@ -531,16 +476,18 @@
             .attr("transform", "rotate(-90)")
             .style("text-anchor", "middle")
             .text("Domestic Box Office (USD)");
+
         svg2.append("text")
             .attr("x", width2 / 2)
             .attr("y", height2 + margin2.bottom - 10)
             .style("text-anchor", "middle")
             .text("Days");
+
         svg2.append("text")
             .attr("x", width2 / 2)
             .attr("y", -20)
             .style("text-anchor", "middle")
-            .text("Movie Box Office Revenue");
+            .text("Movie Box Office Revenue Over Time");
     </script>
 
     <!-- Movie Total Revenue Chart -->
