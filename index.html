@@ -450,7 +450,7 @@
             .curve(d3.curveMonotoneX);
 
         svg2.append("path")
-            .datum(movieSalesData)
+            .datum(allData)
             .attr("class", "line")
             .attr("fill", "none")
             .attr("stroke", colors[0])
@@ -458,7 +458,7 @@
             .attr("d", lineGen);
 
         svg2.selectAll("circle.movie")
-            .data(movieSalesData)
+            .data(allData)
             .join("circle")
             .attr("class", "movie")
             .attr("r", 2)
