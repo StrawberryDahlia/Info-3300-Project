@@ -482,12 +482,18 @@
         const margin2 = { top: 50, right: 30, bottom: 50, left: 110 };
         const width2 = 800 - margin2.left - margin2.right;
         const height2 = 800 - margin2.top - margin2.bottom;
+        
         const svg2 = d3.select("#chart2")
             .append("svg")
             .attr("width", width2 + margin2.left + margin2.right)
             .attr("height", height2 + margin2.top + margin2.bottom)
             .append("g")
-            .attr("transform", translate(${margin2.left}, ${margin2.top}));
+            .attr("transform", `translate(${margin2.left}, ${margin2.top})`);
+
+        svg2.append("g")
+            .attr("class", "x-axis")
+            .attr("transform", `translate(0, ${height2})`)
+            .call(d3.axisBottom(x2));
 
         const allData = [...movieSalesData, ...movieSalesData1,
         ...movieSalesData2, ...movieSalesData3, ...movieSalesData4];
