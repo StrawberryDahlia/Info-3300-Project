@@ -2,544 +2,546 @@
 <html lang="en">
 
 <head>
-    <title>Harry Potter Book and Movie Sales</title>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
+  <title>Harry Potter Book and Movie Sales</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
 
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #c3c3de;
-            color: #333;
-            padding: 20px;
-        }
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #c3c3de;
+      color: #333;
+      padding: 20px;
+    }
 
-        h2 {
-            text-align: center;
-            color: black
-        }
+    h2 {
+      text-align: center;
+      color: black
+    }
 
-        #chart,
-        #chart2 {
-            margin: 20px auto;
-            max-width: 800px;
-            background-color: white;
-            border: 1px solid white;
-            border-radius: 8px;
-            padding: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+    #chart,
+    #chart2 {
+      margin: 20px auto;
+      max-width: 800px;
+      background-color: white;
+      border: 1px solid white;
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
 
 
-        .lines {
-            stroke-dasharray: 5, 5;
-        }
+    .lines {
+      stroke-dasharray: 5, 5;
+    }
 
-        .x-axis text,
-        .y-axis text {
-            font-size: 12px;
-        }
+    .x-axis text,
+    .y-axis text {
+      font-size: 12px;
+    }
 
-        .tooltip {
-            position: absolute;
-            padding: 6px;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            pointer-events: none;
-            font-size: 12px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-    </style>
+    .tooltip {
+      position: absolute;
+      padding: 6px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      pointer-events: none;
+      font-size: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  </style>
 </head>
 
 <body>
 
-    <h2>Harry Potter Book and Movie Sales</h2>
-    <div id="chart"></div>
+  <h2>Harry Potter Book and Movie Sales</h2>
+  <div id="chart"></div>
 
-    <script>
-        const bookSalesData = [
-            { book: 'Book 1', sales: 120 },
-            { book: 'Book 2', sales: 77 },
-            { book: 'Book 3', sales: 65 },
-            { book: 'Book 4', sales: 65 },
-            { book: 'Book 5', sales: 65 },
-            { book: 'Book 6', sales: 65 },
-            { book: 'Book 7', sales: 65 }
-        ];
+  <script>
+    const bookSalesData = [
+      { book: 'Book 1', sales: 120 },
+      { book: 'Book 2', sales: 77 },
+      { book: 'Book 3', sales: 65 },
+      { book: 'Book 4', sales: 65 },
+      { book: 'Book 5', sales: 65 },
+      { book: 'Book 6', sales: 65 },
+      { book: 'Book 7', sales: 65 }
+    ];
 
-        const margin1 = { top: 50, right: 30, bottom: 50, left: 60 };
-        const width1 = 800 - margin1.left - margin1.right;
-        const height1 = 400 - margin1.top - margin1.bottom;
+    const bookColors = ["#D2691E", "#800000", "#FFDAB9", "#40E0D0", "#0000FF", "#006400", "#FFA500"];
 
-        const svg1 = d3.select("#chart")
-            .append("svg")
-            .attr("width", width1 + margin1.left + margin1.right)
-            .attr("height", height1 + margin1.top + margin1.bottom)
-            .append("g")
-            .attr("transform", `translate(${margin1.left}, ${margin1.top})`);
+    const margin1 = { top: 50, right: 30, bottom: 50, left: 60 };
+    const width1 = 800 - margin1.left - margin1.right;
+    const height1 = 400 - margin1.top - margin1.bottom;
 
-        const x1 = d3.scaleBand()
-            .domain(bookSalesData.map(d => d.book))
-            .range([0, width1])
-            .padding(0.2);
+    const svg1 = d3.select("#chart")
+      .append("svg")
+      .attr("width", width1 + margin1.left + margin1.right)
+      .attr("height", height1 + margin1.top + margin1.bottom)
+      .append("g")
+      .attr("transform", `translate(${margin1.left}, ${margin1.top})`);
 
-        const y1 = d3.scaleLinear()
-            .domain([0, d3.max(bookSalesData, d => d.sales)]).nice()
-            .range([height1, 0]);
+    const x1 = d3.scaleBand()
+      .domain(bookSalesData.map(d => d.book))
+      .range([0, width1])
+      .padding(0.2);
 
-        svg1.append("g")
-            .attr("class", "x-axis")
-            .attr("transform", `translate(0, ${height1})`)
-            .call(d3.axisBottom(x1));
+    const y1 = d3.scaleLinear()
+      .domain([0, d3.max(bookSalesData, d => d.sales)]).nice()
+      .range([height1, 0]);
 
-        svg1.append("g")
-            .attr("class", "y-axis")
-            .call(d3.axisLeft(y1));
+    svg1.append("g")
+      .attr("class", "x-axis")
+      .attr("transform", `translate(0, ${height1})`)
+      .call(d3.axisBottom(x1));
 
-        bookSalesData.forEach(d => {
-            svg1.append("rect")
-                .attr("class", "bar")
-                .attr("x", x1(d.book))
-                .attr("width", x1.bandwidth())
-                .attr("y", y1(d.sales))
-                .attr("height", height1 - y1(d.sales))
-                .attr("fill", "steelblue");
-        });
+    svg1.append("g")
+      .attr("class", "y-axis")
+      .call(d3.axisLeft(y1));
 
-        svg1.append("text")
-            .attr("x", -(height1 / 2))
-            .attr("y", -margin1.left + 20)
-            .attr("transform", "rotate(-90)")
-            .style("text-anchor", "middle")
-            .text("Sales (Millions)");
-        svg1.append("text")
-            .attr("x", width1 / 2)
-            .attr("y", height1 + margin1.bottom - 10)
-            .style("text-anchor", "middle")
-            .text("Harry Potter Series");
-        svg1.append("text")
-            .attr("x", width1 / 2)
-            .attr("y", -20)
-            .style("text-anchor", "middle")
-            .text("Book Copies Sales");
-    </script>
+    bookSalesData.forEach((d, i) => {
+      svg1.append("rect")
+        .attr("class", "bar")
+        .attr("x", x1(d.book))
+        .attr("width", x1.bandwidth())
+        .attr("y", y1(d.sales))
+        .attr("height", height1 - y1(d.sales))
+        .attr("fill", bookColors[i]);
+    });
 
-    <div id="chart2"></div>
+    svg1.append("text")
+      .attr("x", -(height1 / 2))
+      .attr("y", -margin1.left + 20)
+      .attr("transform", "rotate(-90)")
+      .style("text-anchor", "middle")
+      .text("Sales (Millions)");
+    svg1.append("text")
+      .attr("x", width1 / 2)
+      .attr("y", height1 + margin1.bottom - 10)
+      .style("text-anchor", "middle")
+      .text("Harry Potter Series");
+    svg1.append("text")
+      .attr("x", width1 / 2)
+      .attr("y", -20)
+      .style("text-anchor", "middle")
+      .text("Book Copies Sales");
+  </script>
 
-    <script>
-        // sorcerers stone
-        const movieSalesData = [
-            { day: 1, sales: 32333203 },
-            { day: 2, sales: 65846144 },
-            { day: 3, sales: 90294621 },
-            { day: 4, sales: 96937000 },
-            { day: 5, sales: 104591000 },
-            { day: 6, sales: 117246000 },
-            { day: 7, sales: 129566000 },
-            { day: 8, sales: 152478000 },
-            { day: 9, sales: 173566000 },
-            { day: 10, sales: 186978513 },
-            { day: 11, sales: 189505000 },
-            { day: 12, sales: 191888000 },
-            { day: 13, sales: 193954000 },
-            { day: 14, sales: 196027000 },
-            { day: 15, sales: 201933000 },
-            { day: 16, sales: 212287000 },
-            { day: 17, sales: 219670289 },
-            { day: 18, sales: 220932000 },
-            { day: 19, sales: 222343000 },
-            { day: 20, sales: 223648000 },
-            { day: 21, sales: 224884000 },
-            { day: 22, sales: 228404000 },
-            { day: 23, sales: 234792000 },
-            { day: 24, sales: 239659542 },
-            { day: 25, sales: 240528000 },
-            { day: 26, sales: 241559000 },
-            { day: 27, sales: 242448000 },
-            { day: 28, sales: 243350000 },
-            { day: 29, sales: 245571000 },
-            { day: 30, sales: 249933000 },
-            { day: 31, sales: 253270000 },
-            { day: 32, sales: 254082000 },
-            { day: 33, sales: 255003000 },
-            { day: 34, sales: 255917000 },
-            { day: 35, sales: 257460000 },
-            { day: 36, sales: 259200000 },
-            { day: 37, sales: 261956000 },
-            { day: 38, sales: 264655000 },
-            { day: 39, sales: 266200000 },
-            { day: 40, sales: 267750733 },
-            { day: 41, sales: 271144000 },
-            { day: 42, sales: 274649000 },
-            { day: 43, sales: 278270000 },
-            { day: 44, sales: 282099000 },
-            { day: 45, sales: 285611000 },
-            { day: 46, sales: 288493000 },
-            { day: 47, sales: 291594218 },
-            { day: 48, sales: 293206000 },
-            { day: 49, sales: 294474000 },
-            { day: 50, sales: 296313000 },
-            { day: 51, sales: 298696000 },
-            { day: 52, sales: 300404434 },
-            { day: 53, sales: 300739000 },
-            { day: 54, sales: 301082000 },
-            { day: 55, sales: 301368000 },
-            { day: 56, sales: 301638000 },
-            { day: 57, sales: 302390000 },
-            { day: 58, sales: 304014000 },
-            { day: 59, sales: 305311880 },
-            { day: 60, sales: 305533000 }
-        ];
+  <div id="chart2"></div>
 
-        // chamber of secrets
-        const movieSalesData1 = [
-            { day: 1, sales: 29631453 },
-            { day: 2, sales: 63845256 },
-            { day: 3, sales: 88357488 },
-            { day: 4, sales: 93679000 },
-            { day: 5, sales: 98421000 },
-            { day: 6, sales: 102454000 },
-            { day: 7, sales: 106132000 },
-            { day: 8, sales: 117138823 },
-            { day: 9, sales: 135845151 },
-            { day: 10, sales: 148358831 },
-            { day: 11, sales: 150920000 },
-            { day: 12, sales: 154408000 },
-            { day: 13, sales: 160822000 },
-            { day: 14, sales: 168041516 },
-            { day: 15, sales: 181419676 },
-            { day: 16, sales: 193446308 },
-            { day: 17, sales: 200159012 },
-            { day: 18, sales: 201207000 },
-            { day: 19, sales: 202160000 },
-            { day: 20, sales: 202997000 },
-            { day: 21, sales: 203885000 },
-            { day: 22, sales: 206600000 },
-            { day: 23, sales: 211238000 },
-            { day: 24, sales: 213970962 },
-            { day: 25, sales: 214533000 },
-            { day: 26, sales: 215161000 },
-            { day: 27, sales: 215741000 },
-            { day: 28, sales: 216295000 },
-            { day: 29, sales: 217723188 },
-            { day: 30, sales: 220610665 },
-            { day: 31, sales: 222619375 },
-            { day: 32, sales: 223066000 },
-            { day: 33, sales: 223574000 },
-            { day: 34, sales: 224006940 },
-            { day: 35, sales: 224450000 },
-            { day: 36, sales: 225353000 },
-            { day: 37, sales: 226878000 },
-            { day: 38, sales: 228821682 },
-            { day: 39, sales: 230158075 },
-            { day: 40, sales: 231000499 },
-            { day: 41, sales: 231950777 },
-            { day: 42, sales: 233833266 },
-            { day: 43, sales: 236000000 },
-            { day: 44, sales: 238246913 },
-            { day: 45, sales: 240307533 },
-            { day: 46, sales: 242130000 },
-            { day: 47, sales: 243855000 },
-            { day: 48, sales: 245996000 },
-            { day: 49, sales: 247445000 },
-            { day: 50, sales: 248854500 },
-            { day: 51, sales: 250720000 },
-            { day: 52, sales: 252097945 },
-            { day: 53, sales: 252390000 },
-            { day: 58, sales: 254593196 },
-            { day: 59, sales: 255449301 }
-        ];
+  <script>
+    // sorcerers stone
+    const movieSalesData = [
+      { day: 1, sales: 32333203 },
+      { day: 2, sales: 65846144 },
+      { day: 3, sales: 90294621 },
+      { day: 4, sales: 96937000 },
+      { day: 5, sales: 104591000 },
+      { day: 6, sales: 117246000 },
+      { day: 7, sales: 129566000 },
+      { day: 8, sales: 152478000 },
+      { day: 9, sales: 173566000 },
+      { day: 10, sales: 186978513 },
+      { day: 11, sales: 189505000 },
+      { day: 12, sales: 191888000 },
+      { day: 13, sales: 193954000 },
+      { day: 14, sales: 196027000 },
+      { day: 15, sales: 201933000 },
+      { day: 16, sales: 212287000 },
+      { day: 17, sales: 219670289 },
+      { day: 18, sales: 220932000 },
+      { day: 19, sales: 222343000 },
+      { day: 20, sales: 223648000 },
+      { day: 21, sales: 224884000 },
+      { day: 22, sales: 228404000 },
+      { day: 23, sales: 234792000 },
+      { day: 24, sales: 239659542 },
+      { day: 25, sales: 240528000 },
+      { day: 26, sales: 241559000 },
+      { day: 27, sales: 242448000 },
+      { day: 28, sales: 243350000 },
+      { day: 29, sales: 245571000 },
+      { day: 30, sales: 249933000 },
+      { day: 31, sales: 253270000 },
+      { day: 32, sales: 254082000 },
+      { day: 33, sales: 255003000 },
+      { day: 34, sales: 255917000 },
+      { day: 35, sales: 257460000 },
+      { day: 36, sales: 259200000 },
+      { day: 37, sales: 261956000 },
+      { day: 38, sales: 264655000 },
+      { day: 39, sales: 266200000 },
+      { day: 40, sales: 267750733 },
+      { day: 41, sales: 271144000 },
+      { day: 42, sales: 274649000 },
+      { day: 43, sales: 278270000 },
+      { day: 44, sales: 282099000 },
+      { day: 45, sales: 285611000 },
+      { day: 46, sales: 288493000 },
+      { day: 47, sales: 291594218 },
+      { day: 48, sales: 293206000 },
+      { day: 49, sales: 294474000 },
+      { day: 50, sales: 296313000 },
+      { day: 51, sales: 298696000 },
+      { day: 52, sales: 300404434 },
+      { day: 53, sales: 300739000 },
+      { day: 54, sales: 301082000 },
+      { day: 55, sales: 301368000 },
+      { day: 56, sales: 301638000 },
+      { day: 57, sales: 302390000 },
+      { day: 58, sales: 304014000 },
+      { day: 59, sales: 305311880 },
+      { day: 60, sales: 305533000 }
+    ];
 
-        // prisoner of azkaban 
-        const movieSalesData2 = [
-            { day: 1, sales: 38268295 },
-            { day: 2, sales: 69762162 },
-            { day: 3, sales: 93687367 },
-            { day: 4, sales: 102116000 },
-            { day: 5, sales: 109363000 },
-            { day: 6, sales: 116242000 },
-            { day: 7, sales: 123065000 },
-            { day: 8, sales: 134100000 },
-            { day: 9, sales: 147946953 },
-            { day: 10, sales: 157975042 },
-            { day: 11, sales: 161963000 },
-            { day: 12, sales: 165706000 },
-            { day: 13, sales: 169329000 },
-            { day: 14, sales: 172898000 },
-            { day: 15, sales: 178200000 },
-            { day: 16, sales: 185308202 },
-            { day: 17, sales: 190925253 },
-            { day: 18, sales: 193291000 },
-            { day: 19, sales: 195897000 },
-            { day: 20, sales: 198052000 },
-            { day: 21, sales: 200290000 },
-            { day: 22, sales: 203700000 },
-            { day: 23, sales: 208167392 },
-            { day: 24, sales: 211537548 },
-            { day: 25, sales: 213114000 },
-            { day: 26, sales: 214673000 },
-            { day: 27, sales: 215877000 },
-            { day: 28, sales: 217179000 },
-            { day: 29, sales: 219095300 },
-            { day: 30, sales: 221402666 },
-            { day: 31, sales: 223117013 },
-            { day: 32, sales: 225719716 },
-            { day: 33, sales: 226804716 },
-            { day: 34, sales: 227755716 },
-            { day: 35, sales: 228743000 },
-            { day: 37, sales: 231478906 },
-            { day: 38, sales: 232795692 },
-            { day: 39, sales: 233484000 },
-            { day: 40, sales: 234205000 },
-            { day: 41, sales: 234911000 },
-            { day: 42, sales: 235587000 },
-            { day: 43, sales: 236318852 },
-            { day: 44, sales: 237361841 },
-            { day: 45, sales: 238344679 },
-            { day: 47, sales: 239234000 },
-            { day: 48, sales: 239662000 },
-            { day: 49, sales: 240093000 },
-            { day: 50, sales: 240500000 },
-            { day: 51, sales: 241216997 },
-            { day: 52, sales: 241770359 }
-        ];
+    // chamber of secrets
+    const movieSalesData1 = [
+      { day: 1, sales: 29631453 },
+      { day: 2, sales: 63845256 },
+      { day: 3, sales: 88357488 },
+      { day: 4, sales: 93679000 },
+      { day: 5, sales: 98421000 },
+      { day: 6, sales: 102454000 },
+      { day: 7, sales: 106132000 },
+      { day: 8, sales: 117138823 },
+      { day: 9, sales: 135845151 },
+      { day: 10, sales: 148358831 },
+      { day: 11, sales: 150920000 },
+      { day: 12, sales: 154408000 },
+      { day: 13, sales: 160822000 },
+      { day: 14, sales: 168041516 },
+      { day: 15, sales: 181419676 },
+      { day: 16, sales: 193446308 },
+      { day: 17, sales: 200159012 },
+      { day: 18, sales: 201207000 },
+      { day: 19, sales: 202160000 },
+      { day: 20, sales: 202997000 },
+      { day: 21, sales: 203885000 },
+      { day: 22, sales: 206600000 },
+      { day: 23, sales: 211238000 },
+      { day: 24, sales: 213970962 },
+      { day: 25, sales: 214533000 },
+      { day: 26, sales: 215161000 },
+      { day: 27, sales: 215741000 },
+      { day: 28, sales: 216295000 },
+      { day: 29, sales: 217723188 },
+      { day: 30, sales: 220610665 },
+      { day: 31, sales: 222619375 },
+      { day: 32, sales: 223066000 },
+      { day: 33, sales: 223574000 },
+      { day: 34, sales: 224006940 },
+      { day: 35, sales: 224450000 },
+      { day: 36, sales: 225353000 },
+      { day: 37, sales: 226878000 },
+      { day: 38, sales: 228821682 },
+      { day: 39, sales: 230158075 },
+      { day: 40, sales: 231000499 },
+      { day: 41, sales: 231950777 },
+      { day: 42, sales: 233833266 },
+      { day: 43, sales: 236000000 },
+      { day: 44, sales: 238246913 },
+      { day: 45, sales: 240307533 },
+      { day: 46, sales: 242130000 },
+      { day: 47, sales: 243855000 },
+      { day: 48, sales: 245996000 },
+      { day: 49, sales: 247445000 },
+      { day: 50, sales: 248854500 },
+      { day: 51, sales: 250720000 },
+      { day: 52, sales: 252097945 },
+      { day: 53, sales: 252390000 },
+      { day: 58, sales: 254593196 },
+      { day: 59, sales: 255449301 }
+    ];
 
-        // goblet of fire
-        const movieSalesData3 = [
-            { day: 1, sales: 40118363 },
-            { day: 2, sales: 76837498 },
-            { day: 3, sales: 102685961 },
-            { day: 4, sales: 110741182 },
-            { day: 5, sales: 119743524 },
-            { day: 6, sales: 133873907 },
-            { day: 7, sales: 146283069 },
-            { day: 8, sales: 169054371 },
-            { day: 9, sales: 189258709 },
-            { day: 10, sales: 201010207 },
-            { day: 11, sales: 203451580 },
-            { day: 12, sales: 205596807 },
-            { day: 13, sales: 207544120 },
-            { day: 14, sales: 209388580 },
-            { day: 15, sales: 214759672 },
-            { day: 16, sales: 223645889 },
-            { day: 17, sales: 229266716 },
-            { day: 18, sales: 230406014 },
-            { day: 19, sales: 231560213 },
-            { day: 20, sales: 232682657 },
-            { day: 21, sales: 233803862 },
-            { day: 22, sales: 236505381 },
-            { day: 23, sales: 241081967 },
-            { day: 24, sales: 244069305 },
-            { day: 25, sales: 244763756 },
-            { day: 26, sales: 245469136 },
-            { day: 27, sales: 246064434 },
-            { day: 28, sales: 246645807 },
-            { day: 29, sales: 248143019 },
-            { day: 30, sales: 250661379 },
-            { day: 31, sales: 252598259 },
-            { day: 32, sales: 253482480 },
-            { day: 33, sales: 254485801 },
-            { day: 34, sales: 255492998 },
-            { day: 35, sales: 256715413 },
-            { day: 36, sales: 258200000 },
-            { day: 37, sales: 259200000 },
-            { day: 38, sales: 260600000 },
-            { day: 39, sales: 263139532 },
-            { day: 40, sales: 265344891 },
-            { day: 41, sales: 267407264 },
-            { day: 42, sales: 269447715 },
-            { day: 43, sales: 271513749 },
-            { day: 44, sales: 273281180 },
-            { day: 45, sales: 275132632 },
-            { day: 46, sales: 277083157 },
-            { day: 47, sales: 277724469 },
-            { day: 60, sales: 284361860 }
-        ];
+    // prisoner of azkaban 
+    const movieSalesData2 = [
+      { day: 1, sales: 38268295 },
+      { day: 2, sales: 69762162 },
+      { day: 3, sales: 93687367 },
+      { day: 4, sales: 102116000 },
+      { day: 5, sales: 109363000 },
+      { day: 6, sales: 116242000 },
+      { day: 7, sales: 123065000 },
+      { day: 8, sales: 134100000 },
+      { day: 9, sales: 147946953 },
+      { day: 10, sales: 157975042 },
+      { day: 11, sales: 161963000 },
+      { day: 12, sales: 165706000 },
+      { day: 13, sales: 169329000 },
+      { day: 14, sales: 172898000 },
+      { day: 15, sales: 178200000 },
+      { day: 16, sales: 185308202 },
+      { day: 17, sales: 190925253 },
+      { day: 18, sales: 193291000 },
+      { day: 19, sales: 195897000 },
+      { day: 20, sales: 198052000 },
+      { day: 21, sales: 200290000 },
+      { day: 22, sales: 203700000 },
+      { day: 23, sales: 208167392 },
+      { day: 24, sales: 211537548 },
+      { day: 25, sales: 213114000 },
+      { day: 26, sales: 214673000 },
+      { day: 27, sales: 215877000 },
+      { day: 28, sales: 217179000 },
+      { day: 29, sales: 219095300 },
+      { day: 30, sales: 221402666 },
+      { day: 31, sales: 223117013 },
+      { day: 32, sales: 225719716 },
+      { day: 33, sales: 226804716 },
+      { day: 34, sales: 227755716 },
+      { day: 35, sales: 228743000 },
+      { day: 37, sales: 231478906 },
+      { day: 38, sales: 232795692 },
+      { day: 39, sales: 233484000 },
+      { day: 40, sales: 234205000 },
+      { day: 41, sales: 234911000 },
+      { day: 42, sales: 235587000 },
+      { day: 43, sales: 236318852 },
+      { day: 44, sales: 237361841 },
+      { day: 45, sales: 238344679 },
+      { day: 47, sales: 239234000 },
+      { day: 48, sales: 239662000 },
+      { day: 49, sales: 240093000 },
+      { day: 50, sales: 240500000 },
+      { day: 51, sales: 241216997 },
+      { day: 52, sales: 241770359 }
+    ];
 
-        // order of the pheonix
-        const movieSalesData4 = [
-            { day: 1, sales: 44232338 },
-            { day: 2, sales: 62606743 },
-            { day: 3, sales: 88448728 },
-            { day: 4, sales: 116759603 },
-            { day: 5, sales: 139715157 },
-            { day: 6, sales: 150130637 },
-            { day: 7, sales: 159300110 },
-            { day: 8, sales: 167738316 },
-            { day: 9, sales: 175355515 },
-            { day: 10, sales: 185570955 },
-            { day: 11, sales: 197852087 },
-            { day: 12, sales: 207866865 },
-            { day: 13, sales: 212681190 },
-            { day: 14, sales: 217083411 },
-            { day: 15, sales: 220998765 },
-            { day: 16, sales: 224706129 },
-            { day: 17, sales: 229771951 },
-            { day: 18, sales: 236845162 },
-            { day: 19, sales: 242439214 },
-            { day: 20, sales: 244877588 },
-            { day: 21, sales: 247191583 },
-            { day: 22, sales: 249357836 },
-            { day: 23, sales: 251505177 },
-            { day: 24, sales: 254167413 },
-            { day: 25, sales: 257955350 },
-            { day: 26, sales: 261027397 },
-            { day: 27, sales: 262654623 },
-            { day: 28, sales: 264078779 },
-            { day: 29, sales: 265421089 },
-            { day: 30, sales: 266615258 },
-            { day: 31, sales: 268189964 },
-            { day: 32, sales: 270279145 },
-            { day: 33, sales: 272047388 },
-            { day: 34, sales: 272828538 },
-            { day: 35, sales: 273600922 },
-            { day: 36, sales: 274339341 },
-            { day: 37, sales: 275105738 },
-            { day: 38, sales: 276024166 },
-            { day: 39, sales: 277478561 },
-            { day: 40, sales: 278762117 },
-            { day: 41, sales: 279316414 },
-            { day: 42, sales: 279874898 },
-            { day: 43, sales: 280357192 },
-            { day: 44, sales: 280828522 },
-            { day: 45, sales: 281383000 },
-            { day: 48, sales: 283497083 },
-            { day: 49, sales: 283758464 },
-            { day: 50, sales: 284001859 },
-            { day: 51, sales: 284250119 },
-            { day: 55, sales: 286825495 }
-        ];
+    // goblet of fire
+    const movieSalesData3 = [
+      { day: 1, sales: 40118363 },
+      { day: 2, sales: 76837498 },
+      { day: 3, sales: 102685961 },
+      { day: 4, sales: 110741182 },
+      { day: 5, sales: 119743524 },
+      { day: 6, sales: 133873907 },
+      { day: 7, sales: 146283069 },
+      { day: 8, sales: 169054371 },
+      { day: 9, sales: 189258709 },
+      { day: 10, sales: 201010207 },
+      { day: 11, sales: 203451580 },
+      { day: 12, sales: 205596807 },
+      { day: 13, sales: 207544120 },
+      { day: 14, sales: 209388580 },
+      { day: 15, sales: 214759672 },
+      { day: 16, sales: 223645889 },
+      { day: 17, sales: 229266716 },
+      { day: 18, sales: 230406014 },
+      { day: 19, sales: 231560213 },
+      { day: 20, sales: 232682657 },
+      { day: 21, sales: 233803862 },
+      { day: 22, sales: 236505381 },
+      { day: 23, sales: 241081967 },
+      { day: 24, sales: 244069305 },
+      { day: 25, sales: 244763756 },
+      { day: 26, sales: 245469136 },
+      { day: 27, sales: 246064434 },
+      { day: 28, sales: 246645807 },
+      { day: 29, sales: 248143019 },
+      { day: 30, sales: 250661379 },
+      { day: 31, sales: 252598259 },
+      { day: 32, sales: 253482480 },
+      { day: 33, sales: 254485801 },
+      { day: 34, sales: 255492998 },
+      { day: 35, sales: 256715413 },
+      { day: 36, sales: 258200000 },
+      { day: 37, sales: 259200000 },
+      { day: 38, sales: 260600000 },
+      { day: 39, sales: 263139532 },
+      { day: 40, sales: 265344891 },
+      { day: 41, sales: 267407264 },
+      { day: 42, sales: 269447715 },
+      { day: 43, sales: 271513749 },
+      { day: 44, sales: 273281180 },
+      { day: 45, sales: 275132632 },
+      { day: 46, sales: 277083157 },
+      { day: 47, sales: 277724469 },
+      { day: 60, sales: 284361860 }
+    ];
 
-        // half blood prince
+    // order of the pheonix
+    const movieSalesData4 = [
+      { day: 1, sales: 44232338 },
+      { day: 2, sales: 62606743 },
+      { day: 3, sales: 88448728 },
+      { day: 4, sales: 116759603 },
+      { day: 5, sales: 139715157 },
+      { day: 6, sales: 150130637 },
+      { day: 7, sales: 159300110 },
+      { day: 8, sales: 167738316 },
+      { day: 9, sales: 175355515 },
+      { day: 10, sales: 185570955 },
+      { day: 11, sales: 197852087 },
+      { day: 12, sales: 207866865 },
+      { day: 13, sales: 212681190 },
+      { day: 14, sales: 217083411 },
+      { day: 15, sales: 220998765 },
+      { day: 16, sales: 224706129 },
+      { day: 17, sales: 229771951 },
+      { day: 18, sales: 236845162 },
+      { day: 19, sales: 242439214 },
+      { day: 20, sales: 244877588 },
+      { day: 21, sales: 247191583 },
+      { day: 22, sales: 249357836 },
+      { day: 23, sales: 251505177 },
+      { day: 24, sales: 254167413 },
+      { day: 25, sales: 257955350 },
+      { day: 26, sales: 261027397 },
+      { day: 27, sales: 262654623 },
+      { day: 28, sales: 264078779 },
+      { day: 29, sales: 265421089 },
+      { day: 30, sales: 266615258 },
+      { day: 31, sales: 268189964 },
+      { day: 32, sales: 270279145 },
+      { day: 33, sales: 272047388 },
+      { day: 34, sales: 272828538 },
+      { day: 35, sales: 273600922 },
+      { day: 36, sales: 274339341 },
+      { day: 37, sales: 275105738 },
+      { day: 38, sales: 276024166 },
+      { day: 39, sales: 277478561 },
+      { day: 40, sales: 278762117 },
+      { day: 41, sales: 279316414 },
+      { day: 42, sales: 279874898 },
+      { day: 43, sales: 280357192 },
+      { day: 44, sales: 280828522 },
+      { day: 45, sales: 281383000 },
+      { day: 48, sales: 283497083 },
+      { day: 49, sales: 283758464 },
+      { day: 50, sales: 284001859 },
+      { day: 51, sales: 284250119 },
+      { day: 55, sales: 286825495 }
+    ];
 
-        const margin2 = { top: 50, right: 30, bottom: 50, left: 110 };
-        const width2 = 800 - margin2.left - margin2.right;
-        const height2 = 400 - margin2.top - margin2.bottom;
-        const svg2 = d3.select("#chart2")
-            .append("svg")
-            .attr("width", width2 + margin2.left + margin2.right)
-            .attr("height", height2 + margin2.top + margin2.bottom)
-            .append("g")
-            .attr("transform", `translate(${margin2.left}, ${margin2.top})`);
+    // half blood prince
 
-        const allData = [...movieSalesData, ...movieSalesData1,
-        ...movieSalesData2, ...movieSalesData3, ...movieSalesData4];
+    const margin2 = { top: 50, right: 30, bottom: 50, left: 110 };
+    const width2 = 800 - margin2.left - margin2.right;
+    const height2 = 400 - margin2.top - margin2.bottom;
+    const svg2 = d3.select("#chart2")
+      .append("svg")
+      .attr("width", width2 + margin2.left + margin2.right)
+      .attr("height", height2 + margin2.top + margin2.bottom)
+      .append("g")
+      .attr("transform", `translate(${margin2.left}, ${margin2.top})`);
 
-        const x2 = d3.scaleLinear()
-            .domain([1, d3.max(allData, d => d.day)])
-            .range([0, width2]);
-        const y2 = d3.scaleLinear()
-            .domain([0, d3.max(allData, d => d.sales)]).nice()
-            .range([height2, 0]);
-        svg2.append("g")
-            .attr("class", "x-axis")
-            .attr("transform", `translate(0, ${height2})`)
-            .call(d3.axisBottom(x2));
-        svg2.append("g")
-            .attr("class", "y-axis")
-            .call(d3.axisLeft(y2));
+    const allData = [...movieSalesData, ...movieSalesData1,
+    ...movieSalesData2, ...movieSalesData3, ...movieSalesData4];
 
-        var lineGen = d3.line()
-            .x(d => x2(d.day))
-            .y(d => y2(d.sales))
-            .curve(d3.curveMonotoneX);
+    const x2 = d3.scaleLinear()
+      .domain([1, d3.max(allData, d => d.day)])
+      .range([0, width2]);
+    const y2 = d3.scaleLinear()
+      .domain([0, d3.max(allData, d => d.sales)]).nice()
+      .range([height2, 0]);
+    svg2.append("g")
+      .attr("class", "x-axis")
+      .attr("transform", `translate(0, ${height2})`)
+      .call(d3.axisBottom(x2));
+    svg2.append("g")
+      .attr("class", "y-axis")
+      .call(d3.axisLeft(y2));
 
-        svg2.append("path")
-            .datum(movieSalesData)
-            .attr("class", "line")
-            .attr("fill", "none")
-            .attr("stroke", "steelblue")
-            .attr("stroke-width", 2)
-            .attr("d", lineGen);
-        svg2.append("path")
-            .datum(movieSalesData1)
-            .attr("class", "line")
-            .attr("fill", "none")
-            .attr("stroke", "orange")
-            .attr("stroke-width", 2)
-            .attr("d", lineGen);
-        svg2.append("path")
-            .datum(movieSalesData2)
-            .attr("class", "line")
-            .attr("fill", "none")
-            .attr("stroke", "green")
-            .attr("stroke-width", 2)
-            .attr("d", lineGen);
-        svg2.append("path")
-            .datum(movieSalesData3)
-            .attr("class", "line")
-            .attr("fill", "none")
-            .attr("stroke", "red")
-            .attr("stroke-width", 2)
-            .attr("d", lineGen);
-        svg2.append("path")
-            .datum(movieSalesData4)
-            .attr("class", "line")
-            .attr("fill", "none")
-            .attr("stroke", "cyan")
-            .attr("stroke-width", 2)
-            .attr("d", lineGen);
+    var lineGen = d3.line()
+      .x(d => x2(d.day))
+      .y(d => y2(d.sales))
+      .curve(d3.curveMonotoneX);
 
-        svg2.selectAll("circle.movie1")
-            .data(movieSalesData)
-            .join("circle")
-            .attr("class", "movie1")
-            .attr("r", 2)
-            .attr("fill", "steelblue")
-            .attr("cx", d => x2(d.day))
-            .attr("cy", d => y2(d.sales));
-        svg2.selectAll("circle.movie2")
-            .data(movieSalesData1)
-            .join("circle")
-            .attr("class", "movie2")
-            .attr("r", 2)
-            .attr("fill", "orange")
-            .attr("cx", d => x2(d.day))
-            .attr("cy", d => y2(d.sales));
-        svg2.selectAll("circle.movie3")
-            .data(movieSalesData2)
-            .join("circle")
-            .attr("class", "movie3")
-            .attr("r", 2)
-            .attr("fill", "green")
-            .attr("cx", d => x2(d.day))
-            .attr("cy", d => y2(d.sales));
-        svg2.selectAll("circle.movie4")
-            .data(movieSalesData3)
-            .join("circle")
-            .attr("class", "movie4")
-            .attr("r", 2)
-            .attr("fill", "red")
-            .attr("cx", d => x2(d.day))
-            .attr("cy", d => y2(d.sales));
-        svg2.selectAll("circle.movie5")
-            .data(movieSalesData4)
-            .join("circle")
-            .attr("class", "movie5")
-            .attr("r", 2)
-            .attr("fill", "cyan")
-            .attr("cx", d => x2(d.day))
-            .attr("cy", d => y2(d.sales));
+    svg2.append("path")
+      .datum(movieSalesData)
+      .attr("class", "line")
+      .attr("fill", "none")
+      .attr("stroke", "steelblue")
+      .attr("stroke-width", 2)
+      .attr("d", lineGen);
+    svg2.append("path")
+      .datum(movieSalesData1)
+      .attr("class", "line")
+      .attr("fill", "none")
+      .attr("stroke", "orange")
+      .attr("stroke-width", 2)
+      .attr("d", lineGen);
+    svg2.append("path")
+      .datum(movieSalesData2)
+      .attr("class", "line")
+      .attr("fill", "none")
+      .attr("stroke", "green")
+      .attr("stroke-width", 2)
+      .attr("d", lineGen);
+    svg2.append("path")
+      .datum(movieSalesData3)
+      .attr("class", "line")
+      .attr("fill", "none")
+      .attr("stroke", "red")
+      .attr("stroke-width", 2)
+      .attr("d", lineGen);
+    svg2.append("path")
+      .datum(movieSalesData4)
+      .attr("class", "line")
+      .attr("fill", "none")
+      .attr("stroke", "cyan")
+      .attr("stroke-width", 2)
+      .attr("d", lineGen);
 
-        svg2.append("text")
-            .attr("x", -(height2 / 2))
-            .attr("y", -margin2.left + 20)
-            .attr("transform", "rotate(-90)")
-            .style("text-anchor", "middle")
-            .text("Domestic Box Office Revenue (USD)");
-        svg2.append("text")
-            .attr("x", width2 / 2)
-            .attr("y", height2 + margin2.bottom - 10)
-            .style("text-anchor", "middle")
-            .text("Days");
-        svg2.append("text")
-            .attr("x", width2 / 2)
-            .attr("y", -20)
-            .style("text-anchor", "middle")
-            .text("Movie Box Office Revenue");
-    </script>
+    svg2.selectAll("circle.movie1")
+      .data(movieSalesData)
+      .join("circle")
+      .attr("class", "movie1")
+      .attr("r", 2)
+      .attr("fill", "steelblue")
+      .attr("cx", d => x2(d.day))
+      .attr("cy", d => y2(d.sales));
+    svg2.selectAll("circle.movie2")
+      .data(movieSalesData1)
+      .join("circle")
+      .attr("class", "movie2")
+      .attr("r", 2)
+      .attr("fill", "orange")
+      .attr("cx", d => x2(d.day))
+      .attr("cy", d => y2(d.sales));
+    svg2.selectAll("circle.movie3")
+      .data(movieSalesData2)
+      .join("circle")
+      .attr("class", "movie3")
+      .attr("r", 2)
+      .attr("fill", "green")
+      .attr("cx", d => x2(d.day))
+      .attr("cy", d => y2(d.sales));
+    svg2.selectAll("circle.movie4")
+      .data(movieSalesData3)
+      .join("circle")
+      .attr("class", "movie4")
+      .attr("r", 2)
+      .attr("fill", "red")
+      .attr("cx", d => x2(d.day))
+      .attr("cy", d => y2(d.sales));
+    svg2.selectAll("circle.movie5")
+      .data(movieSalesData4)
+      .join("circle")
+      .attr("class", "movie5")
+      .attr("r", 2)
+      .attr("fill", "cyan")
+      .attr("cx", d => x2(d.day))
+      .attr("cy", d => y2(d.sales));
+
+    svg2.append("text")
+      .attr("x", -(height2 / 2))
+      .attr("y", -margin2.left + 20)
+      .attr("transform", "rotate(-90)")
+      .style("text-anchor", "middle")
+      .text("Domestic Box Office Revenue (USD)");
+    svg2.append("text")
+      .attr("x", width2 / 2)
+      .attr("y", height2 + margin2.bottom - 10)
+      .style("text-anchor", "middle")
+      .text("Days");
+    svg2.append("text")
+      .attr("x", width2 / 2)
+      .attr("y", -20)
+      .style("text-anchor", "middle")
+      .text("Movie Box Office Revenue");
+  </script>
 
 </body>
 
