@@ -5,6 +5,48 @@
   <meta charset="UTF-8">
   <title>Harry Potter Book Sales</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
+
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #c3c3de;
+      color: #333;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      color: black
+    }
+
+    #chart, #chart2 {
+      margin: 20px auto;
+      max-width: 800px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .bar:hover {
+      fill: orange;
+    }
+
+    .lines {
+      stroke-dasharray: 5, 5;
+    }
+
+    .line:hover {
+      stroke-dasharray: none;
+      stroke-width: 3;
+    }
+
+    .x-axis text, .y-axis text {
+      font-size: 12px;
+    }
+  </style>
 </head>
 
 <body>
@@ -80,7 +122,7 @@
 
   <script>
     const movieSalesData = [
-           { day: 1, sales: 32333203 },
+            { day: 1, sales: 32333203 },
             { day: 2, sales: 65846144 },
             { day: 3, sales: 90294621 },
             { day: 4, sales: 96937000 },
